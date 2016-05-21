@@ -1,0 +1,49 @@
+Beschrieben wird ein Graph von Relationen zwischen Objekt-Attributen.
+Kanten des Graphen sind Abbildungen oder Funktionen, wie in Mathematik
+oder klassischer Programmierung.
+
+Die Funktionen sind von der Anzahl wahrscheinlich relativ überschaubar,
+vielleicht in der Größenordnung Hundert, wobei wie in Sprachen eine
+Relation existiert, in der mit 100 Worten 99% aller Inhalte beschrieben
+werden, aber die Anzahl an Worten unbegrenzt ist.
+
+Die Anzahl an Objekten und ihren Attributen ist dagegen sehr groß.
+
+Funktionen besitzen einen eindeutigen internen Namen, der der
+C-Variablennamen-Konvention gehorcht. 
+Das Interface, also bei klassischen Funktionen die Argumentenliste mit
+ihren Argumentnamen, Typen und IO-Richtung wird also mit
+Objekt-Attributen konnektiert.
+Es sind in beliebig vielen Sprachen "Label" diesen Entitäten zugeordnet.
+Die Implementierung der Abbildungen geschieht frei, d.h. es exisistiert
+keine Festlegung für eine bestimmte Programmiersprache oder
+Spezialhardware.
+Es gibt auch nicht implementierte Funktionen, das sind entweder
+qualitative Operatoren, die der Annäherung an eine präzise Formulierung
+dienen, oder Funktionsrümpfe, die noch ausgebaut werden sollen.
+
+Es können alternative Implementierungen existieren.
+
+Wenn der Graph oder die Matrix definiert ist, kann es "Fragen
+beantworten". Dafür stellt es zuvor ggfs. erst selbst Fragen, oder
+stellt Fallunterscheidungen dar, und kann die Antwort erläutern.
+
+Für Fragen kann es mehrere Lösungen anbieten und evt. "Kosten" jeder
+Lösung bestimmen.
+
+Ob eine Lösung existiert, hängt von der Bijektivität von Funktionen ab.
+
+Prozeß des Graph-Implementierens:
+Vor einer quantitativen Formulierung von Objektbeziehungen besteht oft
+nur eine assoziative qualitative Definition darüber, daß überhaupt eine
+Abhängigkeit existiert. Hierfür werden genau solche leeren Funktionen
+verwendet. Vor einer Auswertung muß dann auch wiedergegen werden, daß
+undefinierte Beziehungen existieren und daher das Ergebnis nicht
+vollständig bekannt ist.
+
+Alle Definitionen werden zusammen mit der Information des Authors
+gespeichert. Ergebnisse können also einem Author zugeordnet werden, und
+Austausch über Erfahrungen oder Information Dritter ist möglich, so daß
+im optimalen Falle eine Synthese oder Modell-Verfeinerung ermöglicht wird.
+
+
