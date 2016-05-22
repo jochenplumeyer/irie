@@ -15,7 +15,7 @@ klassischen Funktionen die Argumentenliste mit ihren Argumentnamen,
 Typen und IO-Richtung wird also mit Objekt-Attributen konnektiert.
 Es sind in beliebig vielen Sprachen "Label" diesen Entitäten
 zugeordnet. Die Implementierung der Abbildungen geschieht frei, d.h. es
-exisistiert keine Festlegung für eine bestimmte Programmiersprache oder
+existiert keine Festlegung für eine bestimmte Programmiersprache oder
 Spezialhardware. Es gibt auch nicht implementierte Funktionen, das sind
 entweder qualitative Operatoren, die der Annäherung an eine präzise
 Formulierung dienen, oder Funktionsrümpfe, die noch ausgebaut werden
@@ -46,5 +46,14 @@ gespeichert. Ergebnisse können also einem Autor zugeordnet werden,
 und Austausch über Erfahrungen oder Information Dritter ist möglich,
 so daß im optimalen Falle eine Synthese oder Modell-Verfeinerung
 ermöglicht wird.
+
+Zu Beginn wird der Graph mit direktem Code gefüllt, aber frühzeitig
+sollte das mit Meta-Funktionen erledigt werden.
+Diese Meta-Funktionen werden für eine Vielzahl von Auswertungen
+benötigt, z.B. dem Zuweisen zu einer Menge. Von diesen Zuweisungen
+können andere Funktionen abhängig sein, oder wegen der Bildung von
+Symmetrien auf der Basis von Mengen-Zuordnungen kann der Graph implizit
+auf den Funktionszuordnungen von Mengen beruhen (Verallgemeinerung,
+Abstrahierung, Metapher).
 
 
