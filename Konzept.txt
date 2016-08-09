@@ -56,4 +56,17 @@ Symmetrien auf der Basis von Mengen-Zuordnungen kann der Graph implizit
 auf den Funktionszuordnungen von Mengen beruhen (Verallgemeinerung,
 Abstrahierung, Metapher).
 
+Tue, 09 Aug 2016 22:56:56 +0200
+Nun sehe ich wieder mehr die mathematische Modellierung im Vordergrund,
+bei welchen Ausdrücke durch sprachliche Funktionen substitutiert werden
+können.
+
+Ok, wenn ich ein Modell M habe, einen Datenkörper D aus der realen Welt.
+Dann ist das Ziel, möglichst viele relevante Teile von D reproduzieren
+zu können. 
+Das lohnendste Objekt der Modellierung ist wahrscheinlich der Mensch mit
+seinen Bedürfnissen.
+Die hohe Schule der Modellierung wäre: "Wie entstehen Selbstlügen?" bzw.
+soziale Prägung.
+
 
