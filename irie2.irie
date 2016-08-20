@@ -1,0 +1,8 @@
+Leben = BiologischesLebenAufDerErde
+teilmengeVon(BiologischesLebenAufDerErde)=MenschlichesLeben
+teilmengeVon(MenschlichesLeben)=JochenPlumeyer
+meineIdentitaet()=JochenPlumeyer
+voraussetzungenVon(Leben)=Nahrung und Behausung und SozialKontakt
+voraussetzungenVon(Nahrung, Behausung)= Energiequellen, Baumaterial, Landwirtschaft, IntelligenteOrganisation
+voraussetzungenVon(MenschlichesLeben(allgemein(Mensch)) und jetzt())=Einkommen(von(allgemein(Mensch)))
+voraussetzungenVon(Einkommen und jetzt() und hier(Deutschland))= Anstellung oderAuch FamilienUnterstuetzung oderAuch Arbeitslosengeld oderAuch  Sozialhilfe
