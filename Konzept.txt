@@ -83,3 +83,8 @@ Jedes Attribut enthält auch den $step-Wert seiner letzten Änderung, um
 ungewünschte Rekursion einschränken zu können.
 
 JavaScript als Client-Interpreter wäre sicherlich sehr wünschenswert.
+
+Trigger-Mechanismen in Datenbanken wären in Kombination mit Stored
+Procedures in SQL wahrscheinlich am zweckmäßigsten, um schnell ein
+Petri-Netz zu implementieren.
+
