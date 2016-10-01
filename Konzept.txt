@@ -69,4 +69,17 @@ seinen Bedürfnissen.
 Die hohe Schule der Modellierung wäre: "Wie entstehen Selbstlügen?" bzw.
 soziale Prägung.
 
+Sat, 01 Oct 2016 13:13:52 +0200
+Die Funktionsdefinitionen bilden ein Gleichungssystem, das entweder mit
+einem Interpreter ausgewertet, oder auf symbolischer Ebene mit einem CAS
+wie Maxima oder Mathematica geprüft, vereinfacht, in
+Bijektions-Richtungen ergänzt oder sonstwie modifiziert wird.
 
+Propagation von Abbildungen: Es gibt einen global durchnumerierten
+Iterationsschritt $step, für den alle direkten Abbildungen einer
+Änderung ausgewertet und die betreffenden Objekt-Attribute aktualisiert
+werden, wie in einem Petri-Netz.
+Jedes Attribut enthält auch den $step-Wert seiner letzten Änderung, um
+ungewünschte Rekursion einschränken zu können.
+
+JavaScript als Client-Interpreter wäre sicherlich sehr wünschenswert.
