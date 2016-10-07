@@ -13,7 +13,7 @@ my (%h, %d);
 # 	Verzeichnis
 # 	Datei
 
-$d{"process"}{"name-de"}="Prozeß";
+$d{"process"}{"name=de"}="Prozeß";
 
 # Einhängen des temporären Datenbaumes in die globale
 # Hierarchie-Datenstruktur
