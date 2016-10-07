@@ -3,14 +3,30 @@
 use strict;
 use YAML::XS;
 use Data::Dumper;
+use utf8;
+my (%h, %d);
 
-my ($i, %a, $c);
-$i=0;
+# Objekte für den Beginn sollen sein:
+# Für UNIX-Systeme:
+# 	Prozeß
+# 	Befehl
+# 	Verzeichnis
+# 	Datei
 
-$c=<<EndOfCode;
-Ich NameIst "Jochen".
-Ich GeborenAm "8.1.1968".
-Ding AttributName "Datum".
-EndOfCode
+$d{"process"}{"name-de"}="Prozeß";
 
-print "This is the code:\n$c\n";
+# Einhängen des temporären Datenbaumes in die globale
+# Hierarchie-Datenstruktur
+$h{"UNIX systems"}=\%d;
+# Differenz zu anderen, Nicht-UNIX Systemen
+# 
+# Danach würden hinzukommen:
+# 	Host
+# 	Domain
+# 	Netzwerkdienste
+# 	IP:Port
+# 	URL
+# 	Geographische Position
+
+print Dumper(\%h);
+print Dump(\%h);
