@@ -12,26 +12,53 @@ my (%h, %d, $key);
 # 	Befehl
 # 	Verzeichnis
 # 	Datei
+# 
+# Im OO-Sinn sind dies also Klassen, die realen Objekte werden aus ihnen
+# instantiiert.
+# Hier wird also Verallgemeinerung betrieben, das sollte sich auch mal
+# in der Notation niederschlagen.
 
 $d{"process"}{"meta"}{"name"}{"de"}="Prozeß";
-$d{"process"}{"meta"}{"maincontext"}{"operating systems"}="UNIX";
+$d{"process"}{"meta"}{"maincontext"}{"operating system"}="UNIX";
 # Verbalisierung der Sätze:
-- Prozesse machen die eigentliche Arbeit eines Computers
-- hat eine eindeutige natürliche Zahl zugeordnet (also eine ID), die "process ID", ("pid").
-- im Verzeichnis /proc/$pid befinden sich alle Informationen über den Prozeß
-  - exe: Pfad des gestarteten Programms
-  - cmdline: Mit binären Nullen getrenntes Array con Kommandozeile und -Argumenten
-  - environ: Definition von Umgebungsvariablen
-  - fd: Verzeichnis mit Links zu den offenen Filehandles des Prozesses
-  - status: Systeminformationen zum Prozeß
+# - Prozesse machen die eigentliche Arbeit eines Computers
+# - hat eine eindeutige natürliche Zahl zugeordnet (also eine ID), die "process ID", ("pid").
+# - bindet Ressourcen wie RAM, CPU, Dateien (handles und diskspace)
+# - im Verzeichnis /proc/$pid befinden sich alle Informationen über den Prozeß
+#   - exe: Pfad des gestarteten Programms
+#   - cmdline: Mit binären Nullen getrenntes Array con Kommandozeile und -Argumenten
+#   - environ: Definition von Umgebungsvariablen
+#   - fd: Verzeichnis mit Links zu den offenen Filehandles des Prozesses
+#   - status: Systeminformationen zum Prozeß
+$d{"process"}{"pid"}=undef;
+$d{"process"}{"exe"}=undef;
+$d{"process"}{"cmdline"}=undef;
+$d{"process"}{"environ"}=undef;
+$d{"process"}{"fd"}=undef;
+$d{"process"}{"status"}=undef;
+
+$d{"file"}{"meta"}{"name"}{"de"}="Datei";
+$d{"file"}{"meta"}{"maincontext"}{"operating system"}="UNIX";
+$d{"file"}{"size"}=undef;
+$d{"file"}{"basedir"}=undef;
+
+$d{"directory"}{"meta"}{"name"}{"de"}="Verzeichnis";
+$d{"directory"}{"meta"}{"maincontext"}{"operating system"}="UNIX";
+$d{"directory"}{"basedir"}=undef;
+
+$d{"command"}{"meta"}{"name"}{"de"}="Befehl";
+$d{"command"}{"meta"}{"maincontext"}{"operating system"}="UNIX";
+$d{"command"}{"fullpath"}=undef;
+$d{"command"}{"environ"}=undef;
+$d{"command"}{"argument array"}=undef;
+
 
 # Einhängen des temporären Datenbaumes in die globale
 # Hierarchie-Datenstruktur
-#$h{"UNIX systems"}=\%d;
-#%h=%d;
 foreach $key (keys %d)
 {
-	$h{$key}=$d{$key};
+	my @a =keys %{$d{$key}{"meta"}{"maincontext"}};
+	$h{$a[0]}{$d{$key}{"meta"}{"maincontext"}{$a[0]}}{$key}=$d{$key};
 }
 # Differenz zu anderen, Nicht-UNIX Systemen
 # 
