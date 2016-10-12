@@ -2,7 +2,6 @@
 
 use strict;
 use YAML::XS;
-use Data::Dumper;
 use utf8;
 my (%h, %d, $key);
 
@@ -41,6 +40,11 @@ $d{"file"}{"meta"}{"name"}{"de"}="Datei";
 $d{"file"}{"meta"}{"maincontext"}{"operating system"}="UNIX";
 $d{"file"}{"size"}=undef;
 $d{"file"}{"basedir"}=undef;
+$d{"file"}{"name"}=undef;
+# Wenn ich eine Propagationsmaschine baue, brauche ich hier eine Liste
+# von Abbildungen von verschiedenen Autoren basierend auf
+# unterschiedlichen Laufzeitumgebungen.
+$d{"file"}{"fullname"}='$this->basedir.$this->name';
 
 $d{"directory"}{"meta"}{"name"}{"de"}="Verzeichnis";
 $d{"directory"}{"meta"}{"maincontext"}{"operating system"}="UNIX";
@@ -70,5 +74,4 @@ foreach $key (keys %d)
 # 	URL
 # 	Geographische Position
 
-print Dumper(\%h);
-print Dump(\%h);
+YAML::XS::DumpFile("/tmp/irie.yaml", \%h);
