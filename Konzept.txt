@@ -88,3 +88,20 @@ Trigger-Mechanismen in Datenbanken wären in Kombination mit Stored
 Procedures in SQL wahrscheinlich am zweckmäßigsten, um schnell ein
 Petri-Netz zu implementieren.
 
+Ein Antworts-Szenario könnte das Zurückverfolgen im Relationsgraphen
+sein.
+
+Wie implementiere ich Daten?
+Gemäß dem Ansatz eines Graphen von Objekt-Nodes mit Attribut-Registern
+wäre eine Datenmenge D ein Vektor von Attribut-Werten, aber wohl
+meistens nicht in Abhängigkeit von $step, sondern von einer Realzeit t.
+Ganz grob ließe sich das nach System-Messung auch ineinander überführen,
+es bleibt dabei aber Undefiniertheit bzw. Informationsverlust, was aber
+im Kontext mit den anderen Fehlern und Unsicherheiten keine große
+Einschränkung bilden sollte.
+
+Eine wahrscheinliche Falle ist Fehlmodellierung wegen Labeln,
+Namensräumen oder Domains. Hierarchisierung sollte nur als eine
+arbiträre Ordnungskonfiguration angesehen werden, die andere
+Konfigurationen mit einschließt (Beispiel: Verzeichnishierarchie, aber
+mit Symlinks ).
