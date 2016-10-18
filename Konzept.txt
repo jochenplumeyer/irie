@@ -105,3 +105,9 @@ Namensräumen oder Domains. Hierarchisierung sollte nur als eine
 arbiträre Ordnungskonfiguration angesehen werden, die andere
 Konfigurationen mit einschließt (Beispiel: Verzeichnishierarchie, aber
 mit Symlinks ).
+
+Edges des Graphen: Die Ausdrücke, mit denen die Attributwerte definiert
+werden, enthalten andere Attributwerte.
+Sobald ein Attributwert verwendet wird, und dieser auch beiträgt, bildet
+er eine Kante im Relationsgraphen zwischen den beiden Attributen.
+Ein Ausdrucksparser könnte also eine Adjazenzliste aufbauen.
