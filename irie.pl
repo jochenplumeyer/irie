@@ -3,7 +3,7 @@
 use strict;
 use YAML::XS;
 use utf8;
-my (%h, %d, $key);
+my (%h, %d, $key, $this);
 
 # Objekte für den Beginn sollen sein:
 # Für UNIX-Systeme:
@@ -44,7 +44,17 @@ $d{"file"}{"name"}=undef;
 # Wenn ich eine Propagationsmaschine baue, brauche ich hier eine Liste
 # von Abbildungen von verschiedenen Autoren basierend auf
 # unterschiedlichen Laufzeitumgebungen.
-$d{"file"}{"fullname"}='$this->basedir.$this->name';
+#
+# Notation für Graph-Knoten: $hierarchy.path.to.valuename 
+# oder relative Notation:
+# $this.valuename := $this.locator.valuename
+# Instanzen/ Objekte könnten ein Array einer Klasse bilden, das über
+# eine natürliche Zahl adressiert wird:
+# $class.3.valuename := $this.locator.valuename
+# keywords für den Parser wären dann also "this" und "locator",
+# Variablen würden mit "$" erkannt.
+# Ohne "$" würde ich später vermutlich in Konflikte geraten.
+$d{"file"}{"fullname"}="append($this.basedir,$this.name)";
 
 $d{"directory"}{"meta"}{"name"}{"de"}="Verzeichnis";
 $d{"directory"}{"meta"}{"maincontext"}{"operating system"}="UNIX";
