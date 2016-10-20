@@ -54,6 +54,16 @@ $d{"file"}{"name"}=undef;
 # keywords für den Parser wären dann also "this" und "locator",
 # Variablen würden mit "$" erkannt.
 # Ohne "$" würde ich später vermutlich in Konflikte geraten.
+
+# Sätze:
+# Ein Verzeichnis kann Verzeichnisse und Dateien sowie Hardlinks, Symlinks, Device-Dateien, Fifos etc. enthalten.
+# -> Soll ich das wie eine linked list bauen?
+# Bis auf das Initial-Verzeichnis enthalten sie auch ".." als Link für das Parent-Verzeichnis.
+# Verzeichnisse haben einen Namen, der aus Zeichen außer "/" besteht.
+# Sie haben Attribute [...].
+
+# Dateien enthalten eine Datensequenz von Bytes.
+# Sie haben einen Namen und Attribute wie Verzeichnisse
 $d{"file"}{"fullname"}="append($this.basedir,$this.name)";
 
 $d{"directory"}{"meta"}{"name"}{"de"}="Verzeichnis";
