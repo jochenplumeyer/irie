@@ -61,15 +61,19 @@ $d{"file"}{"name"}=undef;
 # Bis auf das Initial-Verzeichnis enthalten sie auch ".." als Link für das Parent-Verzeichnis.
 # Verzeichnisse haben einen Namen, der aus Zeichen außer "/" besteht.
 # Sie haben Attribute [...].
+$d{"directory"}{"meta"}{"name"}{"de"}="Verzeichnis";
+$d{"directory"}{"meta"}{"maincontext"}{"operating system"}="UNIX";
+$d{"directory"}{"basedir"}=undef;
+
 
 # Dateien enthalten eine Datensequenz von Bytes.
 # Sie haben einen Namen und Attribute wie Verzeichnisse
 $d{"file"}{"fullname"}="append($this.basedir,$this.name)";
 
-$d{"directory"}{"meta"}{"name"}{"de"}="Verzeichnis";
-$d{"directory"}{"meta"}{"maincontext"}{"operating system"}="UNIX";
-$d{"directory"}{"basedir"}=undef;
-
+# Dateien können ausführbar sein. 
+# Sie können direkt oder mit einer Laufzeitumgebung wie z.B. einem
+# Interpreter, eventuell mit speziellen Umgebungsvariablen gestartet
+# werden.
 $d{"command"}{"meta"}{"name"}{"de"}="Befehl";
 $d{"command"}{"meta"}{"maincontext"}{"operating system"}="UNIX";
 $d{"command"}{"fullpath"}=undef;
