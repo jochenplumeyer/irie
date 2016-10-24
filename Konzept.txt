@@ -1,3 +1,23 @@
+Ansatz der Synthese vieler Beobachtungen:
+Ideal ist das komplette Verstehen von Vorgängen, aber bevor das erreicht
+wird, kann man nur ein Puzzle von Beobachtungen zu groben Vermutungen
+zusammensetzen.
+Ein solches Puzzle-Stück wäre wohl eine Einzel-Folgerung aus einer
+eigenen Beobachtung oder einem Beobachtungsbericht.
+Eine Folgerung besteht aus einer Veränderungsbeschreibung.
+Es gibt also ein Vor und Danach einer Veränderung. Die Veränderung
+könnte man formal als Abbildung des Zustandsvektors auf sich selbst
+definieren.
+Aus atomaren Veränderungsbeschreibungen wird so ein Geflecht von
+denselben zu einem "Weltverständnis" zusammengesetzt.
+Aus dem ständigen Strom von Beobachtungen wird dieses Set an
+Beschreibungen mehr schlecht als recht verifiziert, und die Ergebnisse
+mit Anderen synchronisiert.
+Grobe Fehler in dem individuellen Glaubenssystem sind die Regel.
+
+Frage: Wie liegen die Beobachtungen vor?
+
+Geschlossen determinierter Ansatz:
 Beschrieben wird ein Graph von Relationen zwischen Objekt-Attributen.
 Kanten des Graphen sind Abbildungen oder Funktionen, wie in Mathematik
 oder klassischer Programmierung.
