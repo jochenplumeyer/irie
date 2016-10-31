@@ -16,6 +16,8 @@ mit Anderen synchronisiert.
 Grobe Fehler in dem individuellen Glaubenssystem sind die Regel.
 
 Frage: Wie liegen die Beobachtungen vor?
+Das Format, das verarbeitet wird, könnte eine Sequenz hiervon sein:
+<Verb/ Funktion>,Attribut1=Wert1,...,AttributN=WertN<Zeilenende>
 
 Geschlossen determinierter Ansatz:
 Beschrieben wird ein Graph von Relationen zwischen Objekt-Attributen.
