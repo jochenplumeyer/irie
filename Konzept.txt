@@ -19,6 +19,20 @@ Frage: Wie liegen die Beobachtungen vor?
 Das Format, das verarbeitet wird, könnte eine Sequenz hiervon sein:
 <Verb/ Funktion>,Attribut1=Wert1,...,AttributN=WertN<Zeilenende>
 
+Limitierung des Observablen-Ansatzes:
+Da wir versuchen, das Universum durch Zustandsveränderungen zu
+simulieren, wobei ein Zustand sich aus Ort (oder "Pointer", impliziert
+beliebig viele mögliche Intertialsysteme oder Namensraum-Systeme) und
+Datum (also quantitative Aussage, impliziert Fehler und prinzipielle
+Unschärfe) besteht, und die Veränderung durch funktionelle Abbildung
+beschrieben wird, aber insbesondere in einem System mit Evolution die
+Observablen ihre Relationen selbständig ändern, muß es sich bei dieser
+Simulation immer nur um limitierte Annäherungen handeln, die auch durch
+(vielleicht zum größten Teil vermeintliche) Eigeninteressen die Tendenz
+besitzt zu korrumpieren, also verfremdende Vereinfachungen zu verwenden,
+um die Implementierungsenergie zu senken.
+Implementierungsenergie ist evt. identisch mit Streß.
+
 Geschlossen determinierter Ansatz:
 Beschrieben wird ein Graph von Relationen zwischen Objekt-Attributen.
 Kanten des Graphen sind Abbildungen oder Funktionen, wie in Mathematik
