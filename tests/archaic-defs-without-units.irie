@@ -1,0 +1,14 @@
+alias("translation")="tl" ;
+tl("human", "en", "de")="Mensch" ;
+tl("creature", "en", "de")="Lebewesen" ;
+is("Mensch", "Lebewesen") ;
+tl("animal", "en", "de")="Tier" ;
+is("animal", "creature") ;
+tl("ein kleiner Teil", "de", "en")="a small portion" ; 
+tl("ein sehr kleiner Teil", "de", "en")="a very small portion" ; 
+p("location", known(sets_or_including("materia", "energy")))=universe ;
+definition("universe", a_set_of("galaxy")) ;
+definition("galaxy", a_set_of("star system")) ;
+definition("Erdbahn")=Erdbahn_radius*e^(i/tropisches_Jahr*t) ;
+definition("Erdbahn_x")=Erdbahn_radius*cos(2*π*t/tropisches_Jahr) ;
+definition("Erdbahn_y")=Erdbahn_radius*sin(2*π*t/tropisches_Jahr) ;

@@ -1,11 +1,42 @@
-#
-# Parser.yp
-# 
-# Parse::Yapp input grammar example.
-#
-# This file is PUBLIC DOMAIN 
-#
-#
+%{
+	# libparse-yapp-perl Debian package is needed to compile this
+	use utf8;
+	use open ':encoding(utf8)';
+	binmode(STDOUT, ":encoding(utf8)");
+
+	use Data::Dumper;
+	use YAML::XS; # libyaml-libyaml-perl is its Debian package
+	my(
+		$debugmode, # Flag for debugging output
+		$eqno, # Equation Number
+		%d, # Result data tree, not yet used
+		$xseq, # Unused, is this for micro sequences?
+		@subterm, # Accumulating array of term hashes of each equation
+		$termno, # Counter of terms in a equation during parsing
+		@equation_terms # Result array of equations, containing arrays of terms
+		);
+	$eqno=1;
+	$debugmode=0;
+	$xseq="";
+	$termno=0;
+	@subterm=();
+
+sub dp()
+{
+	my $string = shift;
+	if($debugmode==0)
+	{
+		return "NoDebug\n";
+	}
+	else
+	{
+		print "DEBUGPRINT: >".$string."<\n";
+		return "";
+	}
+}
+
+%}
+
 %right  '='
 %left   '-' '+'
 %left   '*' '/'
@@ -14,68 +45,269 @@
 
 %%
 input:  #empty
-        |   input line  { push(@{$_[1]},$_[2]); $_[1] }
+  |   input line  { push(@{$_[1]},$_[2]); $_[1] }
 ;
 
-line:       '\n'                { $_[1] }
-        |   exp '\n'            { print "$_[1]\n" }
-		|	error '\n' { $_[0]->YYErrok }
+line:  ';'  { 
+		&dp("empty ;"); 
+		@{$equation_terms[$eqno]}=@subterm;
+		$termno=0;
+		@subterm=();
+		$eqno++; 
+		return; 
+		 }
+|   exp ';'  { 
+		  		print $_[1]."\n"; 
+		&dp("action exp:".$_[1]); 
+		@{$equation_terms[$eqno]}=@subterm;
+		$eqno++; 
+		print Dumper(\@subterm);
+		$termno=0;
+		@subterm=();
+		return $_[1]; 
+		  }
+|	error ';' { $_[0]->YYErrok }
 ;
 
-exp:        NUM
-        |   VAR                 { $_[0]->YYData->{VARS}{$_[1]} }
-        |   VAR '=' exp         { $_[0]->YYData->{VARS}{$_[1]}=$_[3] }
-        |   exp '+' exp         { $_[1] + $_[3] }
-        |   exp '-' exp         { $_[1] - $_[3] }
-        |   exp '*' exp         { $_[1] * $_[3] }
-        |   exp '/' exp         {
-                                      $_[3]
-                                  and return($_[1] / $_[3]);
-                                  $_[0]->YYData->{ERRMSG}
-                                    =   "Illegal division by zero.\n";
-                                  $_[0]->YYError;
-                                  undef
-                                }
-        |   '-' exp %prec NEG   { -$_[2] }
-        |   exp '^' exp         { $_[1] ** $_[3] }
-        |   '(' exp ')'         { $_[2] }
+exp:  NUM   { 
+		$subterm[$termno]{"type"}="NUM";
+		$subterm[$termno]{"value"}=$_[1];
+		$subterm[$termno]{"terminal"}=1;
+		$subterm[$termno]{"index"}=$termno;
+		$termno++;
+		&dp("NUM input"); 
+		return $termno-1; # subterm array index reducing
+		return "\"".$_[1]."\""; # direct reducing
+		  }
+		  |  NUM '±' NUM  { 
+		$subterm[$termno]{"type"}="NUM";
+		$subterm[$termno]{"value"}=$_[1];
+		$subterm[$termno]{"terminal"}=1;
+		$subterm[$termno]{"index"}=$termno;
+		$termno++;
+		&dp("NUM input"); 
+		return $termno-1; # subterm array index reducing
+		return "\"".$_[1]."\""; # direct reducing
+		  }
+  |   STRING  { 
+		$subterm[$termno]{"type"}="STRING";
+		$subterm[$termno]{"value"}="\"".$_[1]."\"";
+		$subterm[$termno]{"terminal"}=1;
+		$subterm[$termno]{"index"}=$termno;
+		$termno++;
+		  		&dp("String expression: ". $_[1] ); 
+		return $termno-1; # subterm array index reducing
+		return "\"".$_[1]."\""; # direct reducing
+		  } 
+  |   VAR   { 
+		$subterm[$termno]{"type"}="VAR";
+		$subterm[$termno]{"value"}=$_[1];
+		$subterm[$termno]{"terminal"}=1;
+		$subterm[$termno]{"index"}=$termno;
+		$termno++;
+		  		&dp("VAR: ". $_[1] ); 
+		return $termno-1; # subterm array index reducing
+		$_[0]->YYData->{VARS}{$_[1]} ; 
+		return $_[1];  # direct reducing
+		  }
+  |   exp '=' exp   { 
+		$subterm[$termno]{"type"}="subterm";
+		$subterm[$termno]{"value"}=$subterm[$_[1]]{"value"}." = ".$subterm[$_[3]]{"value"};
+		$subterm[$termno]{"bytecode"}="eq (".$_[1].", ".$_[3].")";
+		$subterm[$termno]{"terminal"}=0;
+		$subterm[$termno]{"index"}=$termno;
+		$termno++;
+		  		&dp( ($_[1])."=".($_[3])); 
+		return $termno-1; # subterm array index reducing
+		return ($_[1])."=".($_[3]);  # direct reducing
+		  }
+  |   exp '+' exp   { 
+		$subterm[$termno]{"type"}="subterm";
+		$subterm[$termno]{"value"}=$subterm[$_[1]]{"value"}." + ".$subterm[$_[3]]{"value"};
+		$subterm[$termno]{"bytecode"}="sum (".$_[1].", ".$_[3].")";
+		$subterm[$termno]{"terminal"}=0;
+		$subterm[$termno]{"index"}=$termno;
+		$termno++;
+		  		&dp( ($_[1])."+".($_[3])); 
+		return $termno-1; # subterm array index reducing
+		  		return $_[1] + $_[3] ; # direct reducing
+		  }
+  |   exp '-' exp   { 
+		$subterm[$termno]{"type"}="subterm";
+		$subterm[$termno]{"value"}=$subterm[$_[1]]{"value"}." - ".$subterm[$_[3]]{"value"};
+		$subterm[$termno]{"bytecode"}="subtract (".$_[1].", ".$_[3].")";
+		$subterm[$termno]{"terminal"}=0;
+		$subterm[$termno]{"index"}=$termno;
+		$termno++;
+		  		&dp( ($_[1])."-".($_[3])); 
+		return $termno-1; # subterm array index reducing
+		  		return $_[1] - $_[3] ;  # direct reducing
+		  }
+  |   exp '*' exp   {
+		$subterm[$termno]{"type"}="subterm";
+		$subterm[$termno]{"value"}=$subterm[$_[1]]{"value"}." * ".$subterm[$_[3]]{"value"};
+		$subterm[$termno]{"bytecode"}="multiply (".$_[1].", ".$_[3].")";
+		$subterm[$termno]{"terminal"}=0;
+		$subterm[$termno]{"index"}=$termno;
+		$termno++;
+		  		&dp( ($_[1])."*".($_[3])); 
+		return $termno-1; # subterm array index reducing
+		  		return $_[1] * $_[3] ; # direct reducing
+		  }
+  |   exp '/' exp   {
+		$subterm[$termno]{"type"}="subterm";
+		$subterm[$termno]{"value"}=$subterm[$_[1]]{"value"}." / ".$subterm[$_[3]]{"value"};
+		$subterm[$termno]{"bytecode"}="divide (".$_[1].", ".$_[3].")";
+		$subterm[$termno]{"terminal"}=0;
+		$subterm[$termno]{"index"}=$termno;
+		$termno++;
+		  		&dp( ($_[1])."/".($_[3])); 
+		return $termno-1; # subterm array index reducing
+  $_[3]
+  and return($_[1] / $_[3]); # direct reducing
+  $_[0]->YYData->{ERRMSG}
+  =   "Illegal division by zero.\n";
+  $_[0]->YYError;
+  undef
+  }
+  |   '-' exp %prec NEG   { 
+		$subterm[$termno]{"type"}="subterm";
+		$subterm[$termno]{"value"}=" -".$subterm[$_[2]]{"value"};
+		$subterm[$termno]{"bytecode"}="negative (".$_[2].")";
+		$subterm[$termno]{"terminal"}=0;
+		$subterm[$termno]{"index"}=$termno;
+		$termno++;
+		  		&dp( "-".($_[2])); 
+		return $termno-1; # subterm array index reducing
+		  		return -$_[2] ; # direct reducing
+		  }
+  |   exp '^' exp   { 
+		$subterm[$termno]{"type"}="subterm";
+		$subterm[$termno]{"value"}=$subterm[$_[1]]{"value"}." ^ ".$subterm[$_[3]]{"value"};
+		$subterm[$termno]{"bytecode"}="potence (".$_[1].", ".$_[3].")";
+		$subterm[$termno]{"terminal"}=0;
+		$subterm[$termno]{"index"}=$termno;
+		$termno++;
+		  		&dp( ($_[1])."^".($_[3])); 
+		return $termno-1; # subterm array index reducing
+		  		return $_[1] ** $_[3] ; # direct reducing
+		  }
+  |   '(' exp ')'   { 
+		$subterm[$termno]{"type"}="subterm";
+		$subterm[$termno]{"value"}=$subterm[$_[2]]{"value"};
+		$subterm[$termno]{"bytecode"}=" (".$_[2].")";
+		$subterm[$termno]{"terminal"}=0;
+		$subterm[$termno]{"index"}=$termno;
+		$termno++;
+		  		&dp( $_[2]); 
+		return $termno-1; # subterm array index reducing
+		  		return $_[2] ;  # direct reducing
+		  }
+  |   FUNC '(' funcargs ')'   { 
+		$subterm[$termno]{"type"}="function";
+		$subterm[$termno]{"value"}="".$_[1]." (";
+		foreach (@main::funcargs)
+		{
+			$subterm[$termno]{"value"}.= $subterm[$_]{"value"}.", ";
+		}
+		$subterm[$termno]{"value"}=substr($subterm[$termno]{"value"}, 0, -2);
+		$subterm[$termno]{"value"}.=")";
+		$subterm[$termno]{"bytecode"}="".$_[1]." (".join(",", @main::funcargs).")";
+		$subterm[$termno]{"terminal"}=0;
+		$subterm[$termno]{"index"}=$termno;
+		$termno++;
+		  		&dp( "FUNCTION: ".$_[1]."(".join(",", @main::funcargs).")"); 
+		return $termno-1; # subterm array index reducing
+		  		return $_[2] ;  # direct reducing
+			}
 ;
 
+funcargs: exp   { 
+		$subterm[$termno]{"type"}="func_arg";
+		$subterm[$termno]{"value"}=$subterm[$_[1]]{"value"};
+		$subterm[$termno]{"bytecode"}="func_arg: ".$_[1];
+		$subterm[$termno]{"terminal"}=0;
+		$subterm[$termno]{"index"}=$termno;
+		$termno++;
+		  		&dp( "FuncArg: ".$_[1]); 
+		@main::funcargs=($_[1]) ;
+		return $termno-1; # subterm array index reducing
+		  }
+	| funcargs ',' exp   { 
+		$subterm[$termno]{"type"}="func_arg";
+		$subterm[$termno]{"value"}=$subterm[$_[3]]{"value"};
+		$subterm[$termno]{"bytecode"}="func_arg: ".$_[3];
+		$subterm[$termno]{"terminal"}=0;
+		$subterm[$termno]{"index"}=$termno;
+		$termno++;
+		  		&dp( "FuncArg: ".$_[3]); 
+		push @main::funcargs, $_[3] ;
+		return $termno-1; # subterm array index reducing
+		  }
+	;
 %%
+	use utf8;
+	use open ':encoding(utf8)';
+	binmode(STDOUT, ":encoding(utf8)");
+	binmode(STDIN, ":encoding(utf8)");
+	use Data::Dumper;
+	use YAML::XS;
+
 
 sub _Error {
-        exists $_[0]->YYData->{ERRMSG}
-    and do {
-        print $_[0]->YYData->{ERRMSG};
-        delete $_[0]->YYData->{ERRMSG};
-        return;
-    };
-    print "Syntax error.\n";
+  exists $_[0]->YYData->{ERRMSG}
+  and do {
+  print $_[0]->YYData->{ERRMSG};
+  delete $_[0]->YYData->{ERRMSG};
+  return;
+  };
+  print "Syntax error.\n";
+	 print Dumper($_[0]);
 }
 
 sub _Lexer {
-    my($parser)=shift;
+  my($parser)=shift;
 
-        $parser->YYData->{INPUT}
-    or  $parser->YYData->{INPUT} = <STDIN>
-    or  return('',undef);
+	 # Slurp mode, no line-oriented input
+	 undef $/;
+  $parser->YYData->{INPUT}
+  or  $parser->YYData->{INPUT} = <INFILE>
+  or  $parser->YYData->{INPUT} = <STDIN>
+  or  return('',undef);
 
-    $parser->YYData->{INPUT}=~s/^[ \t]//;
+  #$parser->YYData->{INPUT}=~s/^[ \t]//;
+  $parser->YYData->{INPUT}=~s/^[ \t\n\r]+//s;
 
-    for ($parser->YYData->{INPUT}) {
-        s/^([0-9]+(?:\.[0-9]+)?)//
-                and return('NUM',$1);
-        s/^([A-Za-z][A-Za-z0-9_]*)//
-                and return('VAR',$1);
-        s/^(.)//s
-                and return($1,$1);
-    }
+  for ($parser->YYData->{INPUT}) {
+  s/^"([^"\\]*(?:\\.[^"\\]*)*)"//
+  and return('STRING',$1);
+  s/^([A-Za-z][A-Za-z0-9_]*)\(/(/
+  and return('FUNC',$1);
+  s/^([0-9]+(?:\.[0-9]+)?)//
+  and return('NUM',$1);
+  s/^(π)//
+  and return('NUM', "PI");
+  s/^([A-Za-z][A-Za-z0-9_]*)//
+  and return('VAR',$1);
+  s/^(.)//s
+  and return($1,$1);
+  }
 }
 
 sub Run {
-    my($self)=shift;
-    $self->YYParse( yylex => \&_Lexer, yyerror => \&_Error );
+  my($self)=shift;
+  $self->YYParse( yylex => \&_Lexer, yyerror => \&_Error );
+	 $eqno--;
+	 &dp("$eqno equations parsed.");
+	 YAML::XS::DumpFile("test.yaml", \@equation_terms);
 }
 
+my (@funcargs);
 my($calc)=new Parser;
+if (defined $ARGV[0])
+{
+	open(INPUT, "<", $ARGV[0]) || die "$!"; 
+}
 $calc->Run;
+
+# vim: syntax=perl 
