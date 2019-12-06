@@ -79,7 +79,7 @@ exp:  NUM   {
 		return $termno-1; # subterm array index reducing
 		return "\"".$_[1]."\""; # direct reducing
 		  }
-		  |  NUM '±' NUM  { 
+  |  NUM '±' NUM  { 
 		$subterm[$termno]{"type"}="NUM";
 		$subterm[$termno]{"value"}=$_[1];
 		$subterm[$termno]{"terminal"}=1;
@@ -114,6 +114,7 @@ exp:  NUM   {
 		$subterm[$termno]{"type"}="subterm";
 		$subterm[$termno]{"value"}=$subterm[$_[1]]{"value"}." = ".$subterm[$_[3]]{"value"};
 		$subterm[$termno]{"bytecode"}="eq (".$_[1].", ".$_[3].")";
+		@{$subterm[$termno]{"opcode"}}= ("eq", $_[1], $_[3]);
 		$subterm[$termno]{"terminal"}=0;
 		$subterm[$termno]{"index"}=$termno;
 		$termno++;
@@ -125,6 +126,7 @@ exp:  NUM   {
 		$subterm[$termno]{"type"}="subterm";
 		$subterm[$termno]{"value"}=$subterm[$_[1]]{"value"}." + ".$subterm[$_[3]]{"value"};
 		$subterm[$termno]{"bytecode"}="sum (".$_[1].", ".$_[3].")";
+		@{$subterm[$termno]{"opcode"}}=("sum", $_[1],  $_[3]);
 		$subterm[$termno]{"terminal"}=0;
 		$subterm[$termno]{"index"}=$termno;
 		$termno++;
@@ -136,6 +138,7 @@ exp:  NUM   {
 		$subterm[$termno]{"type"}="subterm";
 		$subterm[$termno]{"value"}=$subterm[$_[1]]{"value"}." - ".$subterm[$_[3]]{"value"};
 		$subterm[$termno]{"bytecode"}="subtract (".$_[1].", ".$_[3].")";
+		@{$subterm[$termno]{"opcode"}}=("subtract", $_[1], $_[3] );
 		$subterm[$termno]{"terminal"}=0;
 		$subterm[$termno]{"index"}=$termno;
 		$termno++;
@@ -147,6 +150,7 @@ exp:  NUM   {
 		$subterm[$termno]{"type"}="subterm";
 		$subterm[$termno]{"value"}=$subterm[$_[1]]{"value"}." * ".$subterm[$_[3]]{"value"};
 		$subterm[$termno]{"bytecode"}="multiply (".$_[1].", ".$_[3].")";
+		@{$subterm[$termno]{"opcode"}}=("multiply", $_[1]. $_[3]);
 		$subterm[$termno]{"terminal"}=0;
 		$subterm[$termno]{"index"}=$termno;
 		$termno++;
@@ -158,6 +162,7 @@ exp:  NUM   {
 		$subterm[$termno]{"type"}="subterm";
 		$subterm[$termno]{"value"}=$subterm[$_[1]]{"value"}." / ".$subterm[$_[3]]{"value"};
 		$subterm[$termno]{"bytecode"}="divide (".$_[1].", ".$_[3].")";
+		@{$subterm[$termno]{"opcode"}}=("divide", $_[1], $_[3]);
 		$subterm[$termno]{"terminal"}=0;
 		$subterm[$termno]{"index"}=$termno;
 		$termno++;
@@ -174,6 +179,7 @@ exp:  NUM   {
 		$subterm[$termno]{"type"}="subterm";
 		$subterm[$termno]{"value"}=" -".$subterm[$_[2]]{"value"};
 		$subterm[$termno]{"bytecode"}="negative (".$_[2].")";
+		@{$subterm[$termno]{"opcode"}}=("negative", $_[2]);
 		$subterm[$termno]{"terminal"}=0;
 		$subterm[$termno]{"index"}=$termno;
 		$termno++;
@@ -185,6 +191,7 @@ exp:  NUM   {
 		$subterm[$termno]{"type"}="subterm";
 		$subterm[$termno]{"value"}=$subterm[$_[1]]{"value"}." ^ ".$subterm[$_[3]]{"value"};
 		$subterm[$termno]{"bytecode"}="potence (".$_[1].", ".$_[3].")";
+		@{$subterm[$termno]{"opcode"}}=("potence", $_[1], $_[3]);
 		$subterm[$termno]{"terminal"}=0;
 		$subterm[$termno]{"index"}=$termno;
 		$termno++;
@@ -213,6 +220,8 @@ exp:  NUM   {
 		$subterm[$termno]{"value"}=substr($subterm[$termno]{"value"}, 0, -2);
 		$subterm[$termno]{"value"}.=")";
 		$subterm[$termno]{"bytecode"}="".$_[1]." (".join(",", @main::funcargs).")";
+		push @{$subterm[$termno]{"opcode"}}, $_[1];
+		push @{$subterm[$termno]{"opcode"}}, @main::funcargs;
 		$subterm[$termno]{"terminal"}=0;
 		$subterm[$termno]{"index"}=$termno;
 		$termno++;

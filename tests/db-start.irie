@@ -1,4 +1,5 @@
 lang("de");
 is("Mensch", "Lebewesen");
+x=42;
 p("location", "Lebewesen")="Planet Erde";
 trans("Mensch", "de", "en")="human being";
