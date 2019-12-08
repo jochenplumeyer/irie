@@ -13,15 +13,18 @@
 		$xseq, # Unused, is this for micro sequences?
 		@subterm, # Accumulating array of term hashes of each equation
 		$termno, # Counter of terms in a equation during parsing
-		@equation_terms # Result array of equations, containing arrays of terms
+		@equation_terms, # Result array of equations, containing arrays of terms
+		$nodeno,
+		%map_tn
 		);
 	$eqno=1;
 	$debugmode=0;
 	$xseq="";
 	$termno=0;
 	@subterm=();
+	$nodeno=1; # This should be the next free database ID to store a node
 
-sub dp()
+sub debugprint()
 {
 	my $string = shift;
 	if($debugmode==0)
@@ -49,7 +52,7 @@ input:  #empty
 ;
 
 line:  ';'  { 
-		&dp("empty ;"); 
+		&debugprint("empty ;"); 
 		@{$equation_terms[$eqno]}=@subterm;
 		$termno=0;
 		@subterm=();
@@ -57,11 +60,11 @@ line:  ';'  {
 		return; 
 		 }
 |   exp ';'  { 
-		  		print $_[1]."\n"; 
-		&dp("action exp:".$_[1]); 
+#		  		print $_[1]."\n"; 
+		&debugprint("action exp:".$_[1]); 
 		@{$equation_terms[$eqno]}=@subterm;
 		$eqno++; 
-		print Dumper(\@subterm);
+#		print Dumper(\@subterm);
 		$termno=0;
 		@subterm=();
 		return $_[1]; 
@@ -75,7 +78,9 @@ exp:  NUM   {
 		$subterm[$termno]{"terminal"}=1;
 		$subterm[$termno]{"index"}=$termno;
 		$termno++;
-		&dp("NUM input"); 
+		$map_tn{$eqno}{$termno-1}=$nodeno;
+		$nodeno++;
+		&debugprint("NUM input"); 
 		return $termno-1; # subterm array index reducing
 		return "\"".$_[1]."\""; # direct reducing
 		  }
@@ -85,7 +90,9 @@ exp:  NUM   {
 		$subterm[$termno]{"terminal"}=1;
 		$subterm[$termno]{"index"}=$termno;
 		$termno++;
-		&dp("NUM input"); 
+		$map_tn{$eqno}{$termno-1}=$nodeno;
+		$nodeno++;
+		&debugprint("NUM input"); 
 		return $termno-1; # subterm array index reducing
 		return "\"".$_[1]."\""; # direct reducing
 		  }
@@ -95,7 +102,9 @@ exp:  NUM   {
 		$subterm[$termno]{"terminal"}=1;
 		$subterm[$termno]{"index"}=$termno;
 		$termno++;
-		  		&dp("String expression: ". $_[1] ); 
+		$map_tn{$eqno}{$termno-1}=$nodeno;
+		$nodeno++;
+		&debugprint("String expression: ". $_[1] ); 
 		return $termno-1; # subterm array index reducing
 		return "\"".$_[1]."\""; # direct reducing
 		  } 
@@ -105,7 +114,9 @@ exp:  NUM   {
 		$subterm[$termno]{"terminal"}=1;
 		$subterm[$termno]{"index"}=$termno;
 		$termno++;
-		  		&dp("VAR: ". $_[1] ); 
+		$map_tn{$eqno}{$termno-1}=$nodeno;
+		$nodeno++;
+		  		&debugprint("VAR: ". $_[1] ); 
 		return $termno-1; # subterm array index reducing
 		$_[0]->YYData->{VARS}{$_[1]} ; 
 		return $_[1];  # direct reducing
@@ -118,7 +129,9 @@ exp:  NUM   {
 		$subterm[$termno]{"terminal"}=0;
 		$subterm[$termno]{"index"}=$termno;
 		$termno++;
-		  		&dp( ($_[1])."=".($_[3])); 
+		$map_tn{$eqno}{$termno-1}=$nodeno;
+		$nodeno++;
+		  		&debugprint( ($_[1])."=".($_[3])); 
 		return $termno-1; # subterm array index reducing
 		return ($_[1])."=".($_[3]);  # direct reducing
 		  }
@@ -130,7 +143,9 @@ exp:  NUM   {
 		$subterm[$termno]{"terminal"}=0;
 		$subterm[$termno]{"index"}=$termno;
 		$termno++;
-		  		&dp( ($_[1])."+".($_[3])); 
+		$map_tn{$eqno}{$termno-1}=$nodeno;
+		$nodeno++;
+		  		&debugprint( ($_[1])."+".($_[3])); 
 		return $termno-1; # subterm array index reducing
 		  		return $_[1] + $_[3] ; # direct reducing
 		  }
@@ -142,7 +157,9 @@ exp:  NUM   {
 		$subterm[$termno]{"terminal"}=0;
 		$subterm[$termno]{"index"}=$termno;
 		$termno++;
-		  		&dp( ($_[1])."-".($_[3])); 
+		$map_tn{$eqno}{$termno-1}=$nodeno;
+		$nodeno++;
+		  		&debugprint( ($_[1])."-".($_[3])); 
 		return $termno-1; # subterm array index reducing
 		  		return $_[1] - $_[3] ;  # direct reducing
 		  }
@@ -154,7 +171,9 @@ exp:  NUM   {
 		$subterm[$termno]{"terminal"}=0;
 		$subterm[$termno]{"index"}=$termno;
 		$termno++;
-		  		&dp( ($_[1])."*".($_[3])); 
+		$map_tn{$eqno}{$termno-1}=$nodeno;
+		$nodeno++;
+		  		&debugprint( ($_[1])."*".($_[3])); 
 		return $termno-1; # subterm array index reducing
 		  		return $_[1] * $_[3] ; # direct reducing
 		  }
@@ -166,7 +185,9 @@ exp:  NUM   {
 		$subterm[$termno]{"terminal"}=0;
 		$subterm[$termno]{"index"}=$termno;
 		$termno++;
-		  		&dp( ($_[1])."/".($_[3])); 
+		$map_tn{$eqno}{$termno-1}=$nodeno;
+		$nodeno++;
+		  		&debugprint( ($_[1])."/".($_[3])); 
 		return $termno-1; # subterm array index reducing
   $_[3]
   and return($_[1] / $_[3]); # direct reducing
@@ -183,7 +204,9 @@ exp:  NUM   {
 		$subterm[$termno]{"terminal"}=0;
 		$subterm[$termno]{"index"}=$termno;
 		$termno++;
-		  		&dp( "-".($_[2])); 
+		$map_tn{$eqno}{$termno-1}=$nodeno;
+		$nodeno++;
+		  		&debugprint( "-".($_[2])); 
 		return $termno-1; # subterm array index reducing
 		  		return -$_[2] ; # direct reducing
 		  }
@@ -195,7 +218,9 @@ exp:  NUM   {
 		$subterm[$termno]{"terminal"}=0;
 		$subterm[$termno]{"index"}=$termno;
 		$termno++;
-		  		&dp( ($_[1])."^".($_[3])); 
+		$map_tn{$eqno}{$termno-1}=$nodeno;
+		$nodeno++;
+		  		&debugprint( ($_[1])."^".($_[3])); 
 		return $termno-1; # subterm array index reducing
 		  		return $_[1] ** $_[3] ; # direct reducing
 		  }
@@ -206,7 +231,8 @@ exp:  NUM   {
 		$subterm[$termno]{"terminal"}=0;
 		$subterm[$termno]{"index"}=$termno;
 		$termno++;
-		  		&dp( $_[2]); 
+		$map_tn{$eqno}{$termno-1}=$nodeno;
+		  		&debugprint( $_[2]); 
 		return $termno-1; # subterm array index reducing
 		  		return $_[2] ;  # direct reducing
 		  }
@@ -225,7 +251,9 @@ exp:  NUM   {
 		$subterm[$termno]{"terminal"}=0;
 		$subterm[$termno]{"index"}=$termno;
 		$termno++;
-		  		&dp( "FUNCTION: ".$_[1]."(".join(",", @main::funcargs).")"); 
+		$map_tn{$eqno}{$termno-1}=$nodeno;
+		$nodeno++;
+		  		&debugprint( "FUNCTION: ".$_[1]."(".join(",", @main::funcargs).")"); 
 		return $termno-1; # subterm array index reducing
 		  		return $_[2] ;  # direct reducing
 			}
@@ -238,7 +266,9 @@ funcargs: exp   {
 		$subterm[$termno]{"terminal"}=0;
 		$subterm[$termno]{"index"}=$termno;
 		$termno++;
-		  		&dp( "FuncArg: ".$_[1]); 
+		$map_tn{$eqno}{$termno-1}=$nodeno;
+		$nodeno++;
+		  		&debugprint( "FuncArg: ".$_[1]); 
 		@main::funcargs=($_[1]) ;
 		return $termno-1; # subterm array index reducing
 		  }
@@ -248,8 +278,10 @@ funcargs: exp   {
 		$subterm[$termno]{"bytecode"}="func_arg: ".$_[3];
 		$subterm[$termno]{"terminal"}=0;
 		$subterm[$termno]{"index"}=$termno;
+		$map_tn{$eqno}{$termno-1}=$nodeno;
+		$nodeno++;
 		$termno++;
-		  		&dp( "FuncArg: ".$_[3]); 
+		  		&debugprint( "FuncArg: ".$_[3]); 
 		push @main::funcargs, $_[3] ;
 		return $termno-1; # subterm array index reducing
 		  }
@@ -303,12 +335,28 @@ sub _Lexer {
   }
 }
 
+sub node_create()
+{
+	my ($eqno, $termno);
+
+	foreach $eqno (0...$#equation_terms)
+	{
+		next if (!defined($equation_terms[$eqno]));
+		foreach $termno (0...$#{$equation_terms[$eqno]})
+		{
+			print "\t$eqno, $termno:\n";
+			$d{}
+		}
+	}
+}
+
 sub Run {
   my($self)=shift;
   $self->YYParse( yylex => \&_Lexer, yyerror => \&_Error );
 	 $eqno--;
-	 &dp("$eqno equations parsed.");
+	 &debugprint("$eqno equations parsed.");
 	 YAML::XS::DumpFile("test.yaml", \@equation_terms);
+	 &node_create();
 }
 
 my (@funcargs);

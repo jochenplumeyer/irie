@@ -1,0 +1,16 @@
+TODOs:
+
+Namespaces for nearly everything:
+	Variables
+	Functions
+
+	There should be a cost in doing everything on his own, as there
+	should exist considerable pressure to merge models and data with
+	others.
+
+Function libraries
+
+Data should be possible to strip to time records for later analysis.
+	Could be done with database triggers, which populate data changes
+	with timestamp to result dataset of a simulation.
+

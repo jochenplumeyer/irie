@@ -23,4 +23,13 @@ test: parser.pl
 up: 
 	rsync -av /home/jochen/irie/parser jochen@plumeyer.org:irie/
 
+distclean: MANIFEST
+	tar cfzv .tmp.tar.gz -T MANIFEST
+	rm -r *
+	tar xfz .tmp.tar.gz
+	rm .tmp.tar.gz 
+
+MANIFEST:
+	git ls-files > MANIFEST 
+
 .phony: clean test
